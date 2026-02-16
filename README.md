@@ -222,7 +222,7 @@ sources:
         description: Raw fhv taxi trip data
 ```
 
-Next, I made the ```stg_fhv_tripdata.sql``` file in my staging folder in my dbt project. In that, I wrote the following code to match with this questions criteria:
+Next, I made the ```stg_fhv_tripdata.sql``` file in my staging folder in my dbt project. In that, I wrote the following code to match with this question's criteria:
 
 ```sql
 select dispatching_base_num,
@@ -236,7 +236,7 @@ from {{ source("raw_data", "fhv_tripdata")}}
 where dispatching_base_num is not null
 ```
 
-Finally, I then ran the following code in the dbt analysis folder (added the code and then clicked preview on dbt Cloud)
+Finally, I then ran the following code in the dbt analysis folder (added the code and then clicked preview on dbt Cloud), this is how I got my answer.
 
 ```sql
 select count(*) from {{ref('stg_fhv_tripdata')}}
