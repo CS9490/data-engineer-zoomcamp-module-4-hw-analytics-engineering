@@ -40,7 +40,28 @@ If you run `dbt run --select int_trips_unioned`, what models will be built?
 
 #### Question 1 Answer
 
+ANSWER:
+- **`int_trips_unioned` only**
 
+The model that will be built is just `int_trips_unioned`. If we wanted to do either upstream or downstream dependencies, we would need to add a `+` immedietly before or after the `int_trips_unioned` in the command.
+
+For upstream dependencies to be included, we do:
+
+```bash
+dbt run --select +int_trips_unioned
+```
+
+For downstream dependencies to be included, we do:
+
+```bash
+dbt run --select int_trips_unioned+
+```
+
+To include both downstream and upstream dependencies, we do:
+
+```bash
+dbt run --select +int_trips_unioned+
+```
 
 ---
 
@@ -68,6 +89,12 @@ What happens when you run `dbt test --select fct_trips`?
 - dbt will update the configuration to include the new value
 
 #### Question 2 Answer
+
+ANSWER:
+- dbt will fail the test, returning a non-zero exit code
+
+This is due to the fact that the `accepted_values` test only allows the values passed (1, 2, 3, 4, or 5), therefore, any row with `payment_type = 6` will make the test fail, making dbt return a non-zero exit code.
+
 
 ---
 
