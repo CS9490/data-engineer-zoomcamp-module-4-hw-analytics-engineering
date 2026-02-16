@@ -91,7 +91,7 @@ What happens when you run `dbt test --select fct_trips`?
 #### Question 2 Answer
 
 ANSWER:
-- dbt will fail the test, returning a non-zero exit code
+- **dbt will fail the test, returning a non-zero exit code**
 
 This is due to the fact that the `accepted_values` test only allows the values passed (1, 2, 3, 4, or 5), therefore, any row with `payment_type = 6` will make the test fail, making dbt return a non-zero exit code.
 
@@ -111,6 +111,15 @@ What is the count of records in the `fct_monthly_zone_revenue` model?
 
 #### Question 3 Answer
 
+ANSWER:
+- **12,184**
+
+I ran the following code in BigQuery to get this answer:
+
+```sql
+SELECT COUNT(*) FROM `module-4-dbt.dbt_prod.fct_monthly_zone_revenue`
+```
+
 ---
 
 ### Question 4. Best Performing Zone for Green Taxis (2020)
@@ -126,6 +135,23 @@ Which zone had the highest revenue?
 
 #### Question 4 Answer
 
+ANSWER:
+- **East Harlem North**
+
+I ran the following query in BigQuery to get my answer:
+
+```sql
+SELECT pickup_zone, SUM(revenue_monthly_total_amount) AS total_revenue_2020
+FROM `module-4-dbt.dbt_prod.fct_monthly_zone_revenue` 
+WHERE 
+  service_type = 'Green' 
+  AND 
+  EXTRACT(YEAR FROM revenue_month) = 2020
+GROUP BY pickup_zone
+ORDER BY total_revenue_2020 DESC
+LIMIT 1
+```
+
 ---
 
 ### Question 5. Green Taxi Trip Counts (October 2019)
@@ -139,6 +165,19 @@ Using the `fct_monthly_zone_revenue` table, what is the **total number of trips*
 
 #### Question 5 Answer
 
+ANSWER:
+- **384,624**
+
+I ran the following query in BigQuery to get my answer:
+
+```sql
+SELECT SUM(total_monthly_trips)
+FROM `module-4-dbt.dbt_prod.fct_monthly_zone_revenue` 
+WHERE 
+  service_type = 'Green' 
+  AND 
+  revenue_month = '2019-10-01'
+```
 ---
 
 ### Question 6. Build a Staging Model for FHV Data
