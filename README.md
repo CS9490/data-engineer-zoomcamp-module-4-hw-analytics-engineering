@@ -198,4 +198,48 @@ What is the count of records in `stg_fhv_tripdata`?
 
 #### Question 6 Answer
 
+ANSWER:
+- **43,244,693**
+
+Firstly, I loaded the data into BigQuery using a python script, just as I had done before starting this homework for the green and yellow taxi data.
+
+Then, I updated the sources.yml file in my dbt project to add the fhv_tripdata table as a source:
+
+```yml
+version: 2
+
+sources:
+  - name: raw_data
+    description: "Raw data sources for NYC taxi rides"
+    database: module-4-dbt # Project ID
+    schema: nytaxi # Dataset name
+    tables:
+      - name: yellow_tripdata
+        description: Raw yellow taxi trip data
+      - name: green_tripdata
+        description: Raw green taxi trip data
+      - name: fhv_tripdata
+        description: Raw fhv taxi trip data
+```
+
+Next, I made the ```stg_fhv_tripdata.sql``` file in my staging folder in my dbt project. In that, I wrote the following code to match with this questions criteria:
+
+```sql
+select dispatching_base_num,
+    pickup_datetime,
+    dropOff_datetime as dropoff_datetime,
+    PUlocationID as pickup_location_id,
+    DOlocationID as dropoff_location_id,
+    SR_Flag as sr_flag,
+    Affiliated_base_number as affiliated_base_number
+from {{ source("raw_data", "fhv_tripdata")}}
+where dispatching_base_num is not null
+```
+
+Finally, I then ran the following code in the dbt analysis folder (added the code and then clicked preview on dbt Cloud)
+
+```sql
+select count(*) from {{ref('stg_fhv_tripdata')}}
+```
+
 ---
